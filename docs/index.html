@@ -639,6 +639,46 @@
       font-size: 13px;
       color: var(--muted);
     }
+    /* ── HAMBURGER MENU ── */
+    .hamburger {
+      display: none;
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      color: var(--ink);
+      cursor: pointer;
+      padding: 4px;
+    }
+    
+    /* hide hamburger menu for desktop */
+    @media (max-width: 600px) {
+      .hamburger {
+        display: block; /* Show on mobile */
+      }
+      .nav-links {
+        position: absolute;
+        top: 72px; /* Right below the navbar */
+        left: 0;
+        right: 0;
+        background: #ffffff;
+        flex-direction: column;
+        padding: 24px 32px;
+        gap: 20px;
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 12px 24px rgba(16,12,26,0.06);
+        
+        /* Hidden by default on mobile */
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+      }
+      .nav-links.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+    }
 
     /* ── SCROLL REVEAL ── */
     .reveal {
@@ -668,7 +708,7 @@
       .footer-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 600px) {
-      .nav-links { display: none; }
+      /* .nav-links { display: none; } */
       .services-grid { grid-template-columns: 1fr; }
       .process-steps { grid-template-columns: 1fr; }
       .industries-grid { grid-template-columns: repeat(2, 1fr); }
@@ -691,7 +731,7 @@
   </style>
 </head>
 <body>
-
+<!-- old nav bar
 <nav>
   <div class="nav-inner">
     <a href="#" class="nav-logo"><img src="Logomark-Large-Colored.svg" alt="MotionVA logo" /></a> <ul class="nav-links">
@@ -700,6 +740,24 @@
       <li><a href="#process">How It Works</a></li>
     </ul>
     <a href="#cta" class="btn btn-primary">Book a Discovery Call →</a>
+  </div>
+</nav>
+-->
+/* new responsive nav bar with hamburger menu*/  
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo"><img src="Logomark-Large-Colored.svg" alt="MotionVA logo" /></a>
+    
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#services" class="mobile-link">Services</a></li>
+      <li><a href="#why-us" class="mobile-link">Why Us</a></li>
+      <li><a href="#process" class="mobile-link">How It Works</a></li>
+    </ul>
+
+    <div class="nav-actions" style="display: flex; align-items: center; gap: 12px;">
+      <a href="#cta" class="btn btn-primary">Book a Call</a>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Menu">☰</button>
+    </div>
   </div>
 </nav>
 
@@ -1034,6 +1092,30 @@
     });
   }, { threshold: 0.1 });
   reveals.forEach(el => observer.observe(el));
+
+  // Mobile Menu Toggle
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const navLinks = document.getElementById('navLinks');
+  const mobileLinks = document.querySelectorAll('.mobile-link');
+
+  // Toggle menu open/close when clicking the hamburger
+  hamburgerBtn.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+    // Change icon between hamburger and an 'X'
+    if(navLinks.classList.contains('active')) {
+      hamburgerBtn.innerHTML = '✕';
+    } else {
+      hamburgerBtn.innerHTML = '☰';
+    }
+  });
+
+  // Close the menu automatically when a link is clicked
+  mobileLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('active');
+      hamburgerBtn.innerHTML = '☰';
+    });
+  });
 
   // Trigger hero items immediately
   document.querySelectorAll('.hero .reveal').forEach(el => {
