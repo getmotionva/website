@@ -1,1 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MotionVA — Specialized Virtual Assistance</title>
+  <link rel="icon" type="image/svg+xml" href="Logo-Small-Colored.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montaga&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      /* Updated to cool, violet-leaning neutrals to complement #7B43FF */
+      --ink: #100C1A; 
+      --paper: #F6F5FA;
+      --cream: #EAE7F2;
+      --accent: #7B43FF;
+      --accent-light: #EBE4FF;
+      --muted: #686475;
+      --white: #ffffff;
+      --border: rgba(16, 12, 26, 0.08);
+
+      --font-display: 'Montaga', Georgia, serif;
+      --font-accent: 'Urbanist', sans-serif;
+      --font-body: 'Montaga', sans-serif;
+
+      --max-w: 1160px;
+      --section-pad: 112px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: #ffffff
+      /*background: var(--paper)*/
+      color: var(--ink);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Remove bold styling sitewide except for the `.tag` element */
+    /* This forces all text to normal weight, then restores weight for .tag */
+    body, body * {
+      font-weight: normal !important;
+    }
+    .tag {
+      font-weight: 600 !important;
+    }
+    .trust-logo {
+      font-weight: bold !important;
+    }
+
+    /* ── UTILITY ── */
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 32px; }
+    .tag {
+      display: inline-block;
+      font-family: var(--font-accent);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      /* text-transform: uppercase; */
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 5px 14px;
+      border-radius: 100px;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      /* background: rgba(246,245,250,0.88); */
+      background: #ffffff;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 72px;
+      max-width: var(--max-w); margin: 0 auto; padding: 0 32px;
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: px;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-logo img {
+      display: block;
+      height: 24px; /* adjust to your logo's desired height */
+      width: auto;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      padding: 11px 25px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--ink);
+      color: var(--white);
+    }
+    .btn-primary:hover {
+      background: #1C172B;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(16,12,26,0.22);
+    }
+    .btn-accent {
+      background: var(--accent);
+      color: var(--white);
+    }
+    .btn-accent:hover {
+      background: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(123,67,255,0.35);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--ink);
+      border: 2px solid var(--ink);
+    }
+    .btn-outline:hover {
+      background: var(--ink);
+      color: var(--white);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding-top: 160px;
+      padding-bottom: var(--section-pad);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -120px; right: -200px;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--accent-light) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 64px;
+      align-items: center;
+    }
+    .hero-eyebrow {
+      margin-bottom: 24px;
+    }
+    .hero-headline {
+      font-family: var(--font-display);
+      font-size: clamp(44px, 5.5vw, 72px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+    }
+    .hero-headline em {
+      font-style: normal; /* removed italic per user request */
+      color: var(--accent);
+    }
+    .hero-sub {
+      font-size: 18px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 520px;
+      margin-bottom: 40px;
+    }
+    .hero-actions {
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .hero-note {
+      font-size: 13px;
+      color: var(--muted);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .hero-note::before { content: '✓'; color: var(--accent); font-weight: 700; }
+
+    /* Hero card */
+    .hero-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 36px;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 64px rgba(16,12,26,0.08);
+      position: relative;
+    }
+    .hero-card-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .hero-stat-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;
+    }
+    .hero-stat {
+      background: var(--paper);
+      border-radius: 12px;
+      padding: 18px;
+    }
+    .hero-stat-num {
+      font-family: var(--font-display);
+      font-size: 34px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .hero-stat-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .hero-task-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .hero-task {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--paper);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .hero-task-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-green { background: #10B981; }
+    .dot-orange { background: var(--accent); }
+    .dot-blue { background: #3B82F6; }
+
+    /* ── LOGOS / TRUST BAR ── */
+    .trust-bar {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 36px 0;
+    }
+    .trust-inner {
+      display: flex; align-items: center; gap: 48px; flex-wrap: wrap;
+    }
+    .trust-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .trust-logos {
+      display: flex; align-items: center; gap: 40px; flex-wrap: wrap;
+    }
+    .trust-logo {
+      font-family: var(--font-accent);
+      font-size: 18px;
+      font-weight: 600;
+      color: rgba(16,12,26,0.28);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+    }
+
+    /* ── SERVICES ── */
+    .services { padding: var(--section-pad) 0; }
+    .section-header {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 56px;
+      max-width: 600px;
+    }
+    .section-header h2 {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 3.5vw, 48px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+    }
+    .section-header p {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .service-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 48px rgba(16,12,26,0.1);
+      border-color: transparent;
+    }
+    .service-card:hover::after { transform: scaleX(1); }
+    .service-icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      background: var(--accent-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      margin-bottom: 24px;
+    }
+    .service-card h3 {
+      font-family: var(--font-display);
+      font-size: 21px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+    .service-card p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    .service-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .service-tag {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      background: var(--cream);
+      padding: 4px 12px;
+      border-radius: 100px;
+    }
+
+    /* ── WHY US ── */
+    .why { padding: var(--section-pad) 0; background: var(--ink); }
+    .why .section-header h2 { color: var(--white); }
+    .why .section-header p { color: rgba(246,245,250,0.6); }
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+    .why-features { display: flex; flex-direction: column; gap: 32px; }
+    .why-feature {
+      display: flex; gap: 20px; align-items: flex-start;
+    }
+    .why-feature-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .why-feature-body h4 {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .why-feature-body p {
+      font-size: 15px;
+      color: rgba(246,245,250,0.6);
+      line-height: 1.7;
+    }
+
+    /* Testimonials in why column */
+    .why-testimonials { display: flex; flex-direction: column; gap: 20px; }
+    .testimonial {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 28px;
+    }
+    .testimonial-stars { color: #FBBF24; font-size: 15px; margin-bottom: 14px; }
+    .testimonial-quote {
+      font-size: 15px;
+      color: rgba(246,245,250,0.85);
+      line-height: 1.7;
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+    .testimonial-author { display: flex; align-items: center; gap: 12px; }
+    .testimonial-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+    .testimonial-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+    }
+    .testimonial-role {
+      font-size: 13px;
+      color: rgba(246,245,250,0.5);
+    }
+
+    /* ── HOW IT WORKS ── */
+    .process { padding: var(--section-pad) 0; }
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      position: relative;
+    }
+    .process-steps::before {
+      content: '';
+      position: absolute;
+      top: 28px; left: calc(12.5% + 28px); right: calc(12.5% + 28px);
+      height: 2px;
+      background: repeating-linear-gradient(90deg, var(--accent) 0, var(--accent) 6px, transparent 6px, transparent 14px);
+    }
+    .process-step {
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center;
+      padding: 0 20px;
+    }
+    .step-num {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--white);
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 0 0 8px var(--paper);
+    }
+    .process-step h4 {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+    .process-step p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ── INDUSTRIES ── */
+    .industries { padding: var(--section-pad) 0; background: var(--paper); }
+    .industries-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .industry-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 28px 24px;
+      text-align: center;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .industry-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .industry-icon { font-size: 32px; margin-bottom: 12px; }
+    .industry-card h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .industry-card p { font-size: 13px; color: var(--muted); }
+
+    /* ── CTA ── */
+    .cta-section {
+      padding: var(--section-pad) 0;
+      text-align: center;
+    }
+    .cta-box {
+      background: var(--ink);
+      border-radius: 28px;
+      padding: 80px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 400px; height: 400px;
+      /*background: radial-gradient(circle, var(--accent) 0%, transparent 70%);*/
+    }
+    .cta-box::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -60px;
+      width: 300px; height: 300px;
+      /*background: radial-gradient(circle, rgba(200,82,26,0.1) 0%, transparent 70%);*/
+    }
+    .cta-box .tag { margin-bottom: 24px; position: relative; z-index: 1; }
+    .cta-box h2 {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      margin-bottom: 20px;
+      position: relative; z-index: 1;
+    }
+    .cta-box h2 em {font-style: normal; color: var(--accent); } /* removed italic per request */
+    .cta-box p {
+      font-size: 18px;
+      color: rgba(246,245,250,0.65);
+      margin-bottom: 40px;
+      max-width: 520px;
+      margin-left: auto; margin-right: auto;
+      position: relative; z-index: 1;
+    }
+    .cta-actions {
+      display: flex; align-items: center; justify-content: center; gap: 16px;
+      flex-wrap: wrap;
+      position: relative; z-index: 1;
+    }
+    .btn-white {
+      background: var(--white);
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .btn-white:hover {
+      background: var(--paper);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .btn-ghost {
+      background: transparent;
+      border: 2px solid rgba(246,245,250,0.3);
+      color: rgba(246,245,250,0.8);
+      font-weight: 500;
+    }
+    .btn-ghost:hover {
+      border-color: rgba(246,245,250,0.6);
+      color: var(--white);
+    }
+    .cta-guarantee {
+      font-size: 13px;
+      color: rgba(246,245,250,0.45);
+      margin-top: 24px;
+      position: relative; z-index: 1;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 56px 0 40px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+    .footer-brand .nav-logo { font-size: 24px; display: block; margin-bottom: 14px; }
+    .footer-brand p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 280px;
+    }
+    .footer-col h5 {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a {
+      font-size: 15px;
+      color: var(--ink);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-bottom p {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 960px) {
+      :root { --section-pad: 72px; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-card { display: none; }
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+      .why-grid { grid-template-columns: 1fr; }
+      .process-steps { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+      .process-steps::before { display: none; }
+      .industries-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .services-grid { grid-template-columns: 1fr; }
+      .process-steps { grid-template-columns: 1fr; }
+      .industries-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr; }
+      .cta-box { padding: 52px 28px; }
+      .step-num { box-shadow: none; }
+      .trust-inner { flex-direction: column; align-items: flex-start; gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo"><img src="Logomark-Large-Colored.svg" alt="MotionVA logo" /></a> <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#why-us">Why Us</a></li>
+      <li><a href="#process">How It Works</a></li>
+    </ul>
+    <a href="#cta" class="btn btn-primary">Book a Discovery Call →</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-left">
+        <div class="hero-eyebrow reveal">
+          <span class="tag">Specialized Virtual Assistance</span>
+        </div>
+        <h1 class="hero-headline reveal reveal-delay-1">
+          Keep your business<br><em>always in motion.</em>
+        </h1>
+        <p class="hero-sub reveal reveal-delay-2">
+          Specialized virtual assistance services for ambitious professionals and teams who value dependable support. We handle the nitty-gritty details so you can focus on doing the things that only you can do.
+        </p>
+        <div class="hero-actions reveal reveal-delay-3">
+          <a href="#cta" class="btn btn-accent">Book a Free Discovery Call →</a>
+          <a href="#services" class="btn btn-outline">See Our Services</a>
+        </div>
+        <p class="hero-note reveal reveal-delay-4" style="margin-top: 20px;">No commitment. No pressure. Just a real conversation.</p>
+      </div>
+
+      <div class="hero-card reveal reveal-delay-2">
+        <p class="hero-card-label">Your business at a glance</p>
+        <div class="hero-stat-row">
+          <div class="hero-stat">
+            <div class="hero-stat-num">20+</div>
+            <div class="hero-stat-desc">Hours saved weekly</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">98%</div>
+            <div class="hero-stat-desc">Client satisfaction</div>
+          </div>
+        </div>
+        <ul class="hero-task-list">
+          <li class="hero-task"><span class="hero-task-dot dot-green"></span>Inbox zero — done</li>
+          <li class="hero-task"><span class="hero-task-dot dot-orange"></span>Quarterly report — in progress</li>
+          <li class="hero-task"><span class="hero-task-dot dot-blue"></span>3 meetings scheduled</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="trust-bar">
+  <div class="container">
+    <div class="trust-inner">
+      <span class="trust-label">Trusted by</span>
+      <div class="trust-logos">
+        <span class="trust-logo">Founders & Executives</span>
+        <span class="trust-logo">Law Firms & Attorneys</span>
+        <span class="trust-logo">Startups</span>
+        <span class="trust-logo">Consulting Firms & Agencies</span>
+        <span class="trust-logo">E-commerce Brands</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="services" id="services">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="tag">What We Do</span>
+      <h2>Every task your business needs, handled with precision.</h2>
+      <p>We don't do generic. Our VAs are matched to your industry and workflow, so you get support that actually fits.</p>
+    </div>
+    <div class="services-grid">
+
+      <div class="service-card reveal">
+        <div class="service-icon">👔</div>
+        <h3>Executive Virtual Assistance</h3>
+        <p>Tailored support for busy founders and executives who need to focus on strategy and growth.</p>
+        <div class="service-tags">
+          <span class="service-tag">Inbox Management</span>
+          <span class="service-tag">Travel Logistics</span>
+          <span class="service-tag">Calendar Management</span>
+          <span class="service-tag">Admin Support</span>
+        </div>
+      </div>
+
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-icon">⚖️</div>
+        <h3>Legal Virtual Assistance</h3>
+        <p>Specialized paralegal support designed to maximize billable hours for lawyers, law firms and legal teams.</p>
+        <div class="service-tags">
+          <span class="service-tag">Legal Research</span>
+          <span class="service-tag">Legal Drafting</span>
+          <span class="service-tag">Client Intake</span>
+          <span class="service-tag">Case Management</span>
+        </div>
+      </div>
+
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-icon">📊</div>
+        <h3>Financial Virtual Assistance</h3>
+        <p>Qualified financial ops support for businesses and teams to keep your numbers accurate and organized.</p>
+        <div class="service-tags">
+          <span class="service-tag">Bookkeeping</span>
+          <span class="service-tag">Financial Reporting</span>
+          <span class="service-tag">Invoicing & Billing</span>
+          <span class="service-tag">Expense Tracking</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="why" id="why-us">
+  <div class="container">
+    <div class="why-grid">
+      <div>
+        <div class="section-header reveal">
+          <span class="tag">Why MotionVA</span>
+          <h2>Not just a VA — a business partner who gets it.</h2>
+          <p>We're not a staffing marketplace. We're a specialized agency that takes the time to understand your business before placing a single hand on it.</p>
+        </div>
+        <div class="why-features">
+          <div class="why-feature reveal">
+            <div class="why-feature-icon">🎯</div>
+            <div class="why-feature-body">
+              <h4>Specialized, Not Generic</h4>
+              <p>Our VAs are selected based on your industry and the specific type of support you need. You get someone who already speaks your language.</p>
+            </div>
+          </div>
+          <div class="why-feature reveal reveal-delay-1">
+            <div class="why-feature-icon">🔒</div>
+            <div class="why-feature-body">
+              <h4>Confidentiality You Can Trust</h4>
+              <p>Every engagement includes a formal NDA. Your business data, client lists, and internal processes stay private — always.</p>
+            </div>
+          </div>
+          <div class="why-feature reveal reveal-delay-2">
+            <div class="why-feature-icon">📈</div>
+            <div class="why-feature-body">
+              <h4>Scalable as You Grow</h4>
+              <p>Start with a few hours per week and scale up as your needs expand. Our flexible model moves with your business, not against it.</p>
+            </div>
+          </div>
+          <div class="why-feature reveal reveal-delay-3">
+            <div class="why-feature-icon">⚡</div>
+            <div class="why-feature-body">
+              <h4>Fast Onboarding</h4>
+              <p>Most clients are fully onboarded and operational within 72 hours of their discovery call. No long wait times, no bureaucracy.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="why-testimonials">
+        <div class="testimonial reveal">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-quote">"MotionVA transformed how I run my business. My VA handles my inbox, social calendar, and client onboarding docs. I've gotten 15+ hours back every single week."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">S</div>
+            <div>
+              <div class="testimonial-name">Serena</div>
+              <div class="testimonial-role">Founder</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial reveal reveal-delay-1">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-quote">"The discovery call was zero pressure and actually useful. They matched me with a VA who already understood my niche. It felt less like outsourcing and more like hiring."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">J</div>
+            <div>
+              <div class="testimonial-name">James</div>
+              <div class="testimonial-role">Attorney</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial reveal reveal-delay-2">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-quote">"I was skeptical about virtual support, but MotionVA exceeded every expectation. Professional, proactive, and genuinely invested in our growth."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">A</div>
+            <div>
+              <div class="testimonial-name">Anika</div>
+              <div class="testimonial-role">Operations Lead</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="process" id="process">
+  <div class="container">
+    <div class="section-header reveal" style="max-width: 100%; align-items: center; text-align: center; margin-left: auto; margin-right: auto;">
+      <span class="tag">How It Works</span>
+      <h2>From discovery to delegation in 4 simple steps.</h2>
+      <p>We've made it easy to get started. No lengthy contracts, no complicated setup — just real results, fast.</p>
+    </div>
+    <div class="process-steps">
+      <div class="process-step reveal">
+        <div class="step-num">1</div>
+        <h4>Discovery Call</h4>
+        <p>A relaxed, no-pressure conversation to understand your business, your bottlenecks, and what kind of support would make the biggest impact.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-1">
+        <div class="step-num">2</div>
+        <h4>Custom Matching</h4>
+        <p>We match you with a VA who has the right skills, industry experience, and availability to fit seamlessly into your workflow.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-2">
+        <div class="step-num">3</div>
+        <h4>Onboarding</h4>
+        <p>A structured 72-hour onboarding process where we set up communication channels, document your processes, and get everything in order.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-3">
+        <div class="step-num">4</div>
+        <h4>Delegate &amp; Grow</h4>
+        <p>Hand off the tasks, reclaim your time, and focus on what only you can do. We check in regularly to ensure everything is running smoothly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="industries">
+  <div class="container">
+    <div class="section-header reveal" style="max-width: 100%; align-items: center; text-align: center; margin-left: auto; margin-right: auto;">
+      <span class="tag">Industries We Serve</span>
+      <h2>Built for the way your industry works.</h2>
+    </div>
+    <div class="industries-grid">
+      <div class="industry-card reveal">
+        <div class="industry-icon">👔</div>
+        <h4>Founders & Executives</h4>
+        <p>Inbox management, travel logistics, CRM &amp; scheduling</p>
+      </div>
+      <div class="industry-card reveal reveal-delay-1">
+        <div class="industry-icon">⚖️</div>
+        <h4>Attorneys &amp; Law Firms</h4>
+        <p>Legal research, drafting, intake &amp; case management</p>
+      </div>
+      <div class="industry-card reveal reveal-delay-2">
+        <div class="industry-icon">📦</div>
+        <h4>E-commerce</h4>
+        <p>Store ops, customer service &amp; inventory management</p>
+      </div>
+      <div class="industry-card reveal reveal-delay-3">
+        <div class="industry-icon">🎨</div>
+        <h4>Creative Agencies</h4>
+        <p>Project coordination, proposals &amp; client comms</p>
+      </div>
+      <div class="industry-card reveal reveal-delay-1">
+        <div class="industry-icon">💼</div>
+        <h4>Consulting</h4>
+        <p>Research, reports, scheduling &amp; travel</p>
+      </div>
+      <div class="industry-card reveal reveal-delay-2">
+        <div class="industry-icon">🚀</div>
+        <h4>Startups</h4>
+        <p>Ops support, research &amp; founder-level admin</p>
+      </div>
+      <div class="industry-card reveal reveal-delay-3">
+        <div class="industry-icon">📊</div>
+        <h4>Finance &amp; Accounting</h4>
+        <p>Data entry, scheduling, reporting &amp; client liaison</p>
+      </div>
+      <div class="industry-card reveal reveal-delay-3">
+        <div class="industry-icon">🏠</div>
+        <h4>Real Estate</h4>
+        <p>Listings, CRM, client follow-ups &amp; scheduling</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="cta">
+  <div class="container">
+    <div class="cta-box reveal">
+      <span class="tag">Let's Talk</span>
+      <h2>Ready to stop doing it all<br><em>alone?</em></h2>
+      <p>Book a free, no-obligation discovery call. We'll learn about your business and show you exactly how MotionVA can help.</p>
+      <div class="cta-actions">
+        <a href="https://calendar.app.google/oD18fviP9WiGjCpa8" class="btn btn-white btn-primary" target="blank">Book Your Free Discovery Call →</a>
+        <a href="mailto:sales@getmotionva.com" class="btn btn-ghost">Or email us directly</a>
+      </div>
+      <p class="cta-guarantee">No packages, no pricing grids — just a real conversation about your needs.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo"><img src="Logomark-Large-Colored.svg" alt="MotionVA logo" /></a> <p>Specialized virtual assistance services to keep your business in motion.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <ul class="footer-links">
+          <li><a href="#services">Executive VA</a></li>
+          <li><a href="#services">Legal VA</a></li>
+          <li><a href="#services">Financial VA</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul class="footer-links">
+          <li><a href="#why-us">About Us</a></li>
+          <li><a href="#process">How It Works</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Get Started</h5>
+        <ul class="footer-links">
+          <li><a href="#cta">Book a Call</a></li>
+          <li><a href="mailto:sales@getmotionva.com" target="blank">Contact Us</a></li>
+          <li><a href="https://www.linkedin.com/company/motionva" target="blank">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 MotionVA. All rights reserved.</p>
+      <p>Privacy Policy · Terms of Service</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Trigger hero items immediately
+  document.querySelectorAll('.hero .reveal').forEach(el => {
+    setTimeout(() => el.classList.add('visible'), 100);
+  });
+</script>
+</body>
+</html>
